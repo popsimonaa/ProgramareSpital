@@ -1,0 +1,99 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ProgramareSpital.Models.ApplicationUser> signInManager
+<div class="modal fade" role="dialog" id="appointmentInput" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="background-color: #92bdbb">
+        <div class="modal-content">
+            <form id="apointmentForm" autocomplete="off" novalidate="novalidate">
+                <div class="modal-header">
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Admin))
+                    {
+                        <h4 class="modal-title">Adauga sau modifica o programare</h4>
+                    }
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Medic))
+                    {
+                        <h4 class="modal-title">Detaliile programarii</h4>
+                    }
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Pacient))
+                    {
+                        <h4 class="modal-title">Adauga o programare</h4>
+                    }
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Motivul programarii</label>
+                        <input type="text" maxlength="100" class="form-control" id="title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descriere simptome</label>
+                        <textarea type="text" class="form-control" id="description"></textarea>
+                    </div>
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Admin))
+                    {
+                        <div class="form-group">
+                            <label for="title">Selecteaza pacientul</label>
+                            <select id="patientId" asp-items="@(new SelectList(ViewBag.PatientList, "Id", "Name"))" class="form-control"></select>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (User.IsInRole(ProgramareSpital.Utility.Helper.Medic))
+                        {
+                            <div class="form-group">
+                                <label for="lblNumePacient">Numele pacientului</label>
+                                <label class="form-control" disable id="lblNumePacient" />
+                            </div>
+                            <div class="form-group">
+                                <label for="lblStatus">Status</label>
+                                <label class="form-control" disable id="lblStatus" />
+                            </div>
+                        }
+                        @if (User.IsInRole(ProgramareSpital.Utility.Helper.Pacient))
+                        {
+                            <div class="form-group">
+                                <label> Selecteaza doctorul</label>
+                                <select id="doctorId" asp-items="@(new SelectList(ViewBag.DoctorList, "Id", "Name"))" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Selecteaza pacientul</label>
+                                <select id="patientId" asp-items="@(new SelectList(ViewBag.PatientList, "Id", "Name"))" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="lblStatus">Status</label>
+                                <label class="form-control" disable id="lblStatus" />
+                            </div>
+                        }
+                    }
+                    <div class="form-group">
+                        <label for="appointmentDate">Selectati data si ora dorita pentru programarea</label>
+                        <input class="form-control" id="appointmentDate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Selectati durata</label>
+                        <select id="duration" asp-items="ViewBag.Duration" class="form-control"></select>
+                    </div>
+                    <input type="hidden" id="id" /> @*for submit button*@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="onCloseModal();">Inchide</button> &nbsp;
+
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Admin))
+                    {
+                        @*<button type="button" id="btnSubmit" class="btn btn-success" onclick="onSubmitForm();">Trimite</button>*@
+                        <button type="button" id="btnDelete" class="btn btn-danger" onclick="onDeleteAppointment();">Sterge</button>
+                    }
+
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Medic))
+                    {
+                        <button type="button" id="btnConfirm" class="btn btn-success" onclick="onConfirm();">Confirma</button>
+                        <button type="button" id="btnDelete" class="btn btn-danger" onclick="onDeleteAppointment();">Refuza</button>
+                    }
+                    @if (User.IsInRole(ProgramareSpital.Utility.Helper.Pacient))
+                    {
+                        <button type="button" id="btnSubmit" class="btn btn-success" onclick="onSubmitForm();">Trimite</button>
+                        <button type="button" id="btnDelete" class="btn btn-danger" onclick="onDeleteAppointment();">Sterge</button>
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
